@@ -1,16 +1,26 @@
 package pl.pjatk.demo.movie.model;
 
+import jakarta.persistence.*;
+
+@Entity
 public class Movie {
-    private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
     private String name;
 
+    @Column(name = "is_available")
+    private Boolean isAvailable = false;
+
+    @Enumerated(EnumType.STRING)
     private Category category;
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -28,5 +38,13 @@ public class Movie {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public void setAvailable(Boolean available) {
+        isAvailable = available;
+    }
+
+    public Boolean getAvailable() {
+        return isAvailable;
     }
 }
