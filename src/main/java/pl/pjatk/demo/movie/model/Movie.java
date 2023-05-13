@@ -1,6 +1,7 @@
 package pl.pjatk.demo.movie.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 public class Movie {
@@ -8,6 +9,7 @@ public class Movie {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @NotBlank(message = "Name is mandatory")
     private String name;
 
     @Column(name = "is_available")
