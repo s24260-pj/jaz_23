@@ -4,6 +4,7 @@ import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import pl.pjatk.demo.movie.exceptions.IncorrectDataException;
 import pl.pjatk.demo.movie.exceptions.NotFoundException;
@@ -13,18 +14,21 @@ import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class MovieAdvice {
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<String> handleNotFoundException(NotFoundException exception) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body("Exception occurrence on request. Exception message: " + exception.getLocalizedMessage());
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(IncorrectDataException.class)
     public ResponseEntity<String> incorrectDataException(IncorrectDataException exception) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body("Bad request: " + exception.getLocalizedMessage());
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<Set<ValidationError>> stringResponseEntity(ConstraintViolationException exception) {
         Set<ValidationError> validationErrors = exception.getConstraintViolations().stream()
@@ -34,7 +38,7 @@ public class MovieAdvice {
                 .collect(Collectors.toSet());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(validationErrors);
     }
-    public class ValidationError {
+    private class ValidationError {
         private final String property;
         private final String validationError;
 
